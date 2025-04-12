@@ -89,8 +89,8 @@ jobs:
       run: |
         vab test-all
 
-  macos-legacy-run-v-examples:
-    runs-on: macos-12
+  macos-run-v-examples:
+    runs-on: macos-15
     timeout-minutes: 45
     env:
       VAB_FLAGS: -cg -f '-d no_load_styles' -v 3 --api 30 --build-tools 33.0.2 --device auto --log-clear --archs x86_64
@@ -108,7 +108,7 @@ jobs:
         path: v
 
     - name: Build and install v
-      run: cd ./v && make -j4 && sudo ./v symlink
+      run: cd ./v && make && sudo ./v symlink
 
     - name: Checkout vab
       uses: actions/checkout@v4
