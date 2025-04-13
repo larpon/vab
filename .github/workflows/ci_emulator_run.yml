@@ -135,6 +135,7 @@ jobs:
 
     - name: Install SDK dependencies
       run: |
+        vab install auto
         vab install "build-tools;33.0.2"
         vab install "platforms;android-30"
         vab install bundletool
