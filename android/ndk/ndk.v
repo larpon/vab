@@ -187,7 +187,11 @@ fn min_version_supported_by_vab() string {
 			'21.4.7075529'
 		}
 		'macos' {
-			'21.3.6528147'
+			$if arm64 {
+				'24.0.8215888'
+			} $else {
+				'21.3.6528147'
+			}
 		}
 		'linux' {
 			'21.1.6352462'
