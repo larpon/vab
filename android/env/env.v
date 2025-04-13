@@ -655,15 +655,7 @@ fn ensure_sdkmanager(verbosity int) !bool {
 		}
 		def_components := get_default_components()!
 		// Download
-		uos := $if macos {
-			$if arm64 {
-				'darwin-aarch64'
-			} $else {
-				'mac'
-			}
-		} $else {
-			os.user_os().replace('windows', 'win')
-		}
+		uos := os.user_os().replace('windows', 'win').replace('macos', 'mac')
 		url := def_components['cmdline-tools']['bootstrap_url'].replace('[XXX]', uos)
 		file := os.join_path(os.temp_dir(), 'v-android-sdk-cmdltools.tmp.zip')
 		if !os.exists(file) {
