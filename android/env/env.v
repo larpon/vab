@@ -535,7 +535,7 @@ fn install_opt(opt InstallOptions) !bool {
 
 	opt.verbose(1, 'installing ${opt.dep}: "${item}"...')
 
-	install_cmd := $if windows {
+	mut install_cmd := $if windows {
 		[
 			'cmd /c',
 			'""' + sdkmanager() + '"',
@@ -550,6 +550,19 @@ fn install_opt(opt InstallOptions) !bool {
 			'--sdk_root="${sdk.root()}"',
 			'"${item}"',
 		]
+	}
+
+	$if macos && arm64 {
+		if opt.dep == .system_images {
+			install_cmd = [
+				'yes',
+				'|',
+				sdkmanager(),
+				'--channel=3',
+				'--sdk_root="${sdk.root()}"',
+				'"${item}"',
+			]
+		}
 	}
 
 	match opt.dep {
