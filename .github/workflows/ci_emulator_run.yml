@@ -95,6 +95,7 @@ jobs:
     env:
       VAB_FLAGS: -cg -f '-d no_load_styles' -v 3 --api 30 --build-tools 33.0.2 --device auto --log-clear --archs x86_64
       VFLAGS: -no-parallel
+      ANDROID_SDK_ROOT: "$HOME/Library/Android/sdk"
     steps:
     - uses: actions/setup-java@v4
       with:
@@ -130,12 +131,25 @@ jobs:
     - name: Run vab --help
       run: vab --help
 
-    - name: Run vab doctor before install
+    - name: Ruin Android environment on purpose
+      run: |
+        sudo rm -fr /Users/runner/Library/Android/sdk
+
+    - name: Run 'vab doctor' before
+      run: vab doctor
+
+    - name: Run 'vab install auto'
+      run: |
+        unset ANDROID_SDK_ROOT # These are set in the CI by default
+        unset ANDROID_HOME
+        unset ANDROID_NDK_ROOT
+        vab install auto
+
+    - name: Run 'vab doctor' after
       run: vab doctor
 
     - name: Install SDK dependencies
       run: |
-        vab install auto
         vab install "build-tools;33.0.2"
         vab install "platforms;android-30"
         vab install bundletool
@@ -144,16 +158,16 @@ jobs:
     - name: Run vab doctor
       run: vab doctor
 
-    - name: Cache emulator
-      id: cache-emulator
-      uses: actions/cache@v4
-      with:
-        path: |
-          /Users/runner/Library/Android/sdk/system-images/android-30
-        key: ${{ runner.os }}-android-emulator-${{ hashFiles('/Users/runner/Library/Android/sdk/system-images/android-30') }}
-
+    # - name: Cache emulator
+    #   id: cache-emulator
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: |
+    #       /Users/runner/Library/Android/sdk/system-images/android-30
+    #     key: ${{ runner.os }}-android-emulator-${{ hashFiles('/Users/runner/Library/Android/sdk/system-images/android-30') }}
+    #
     - name: Prepare emulator
-      if: steps.cache-emulator.outputs.cache-hit != 'true'
+      #if: steps.cache-emulator.outputs.cache-hit != 'true'
       run: |
         vab install 'system-images;android-30;aosp_atd;x86_64'
 
