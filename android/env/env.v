@@ -552,19 +552,6 @@ fn install_opt(opt InstallOptions) !bool {
 		]
 	}
 
-	$if macos && arm64 {
-		if opt.dep == .system_images {
-			install_cmd = [
-				'yes',
-				'|',
-				sdkmanager(),
-				'--channel=3',
-				'--sdk_root="${sdk.root()}"',
-				'"${item}"',
-			]
-		}
-	}
-
 	match opt.dep {
 		.bundletool {
 			return ensure_bundletool(opt.verbosity)
