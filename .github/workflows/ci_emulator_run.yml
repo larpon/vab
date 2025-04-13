@@ -130,6 +130,9 @@ jobs:
     - name: Run vab --help
       run: vab --help
 
+    - name: Run vab doctor before install
+      run: vab doctor
+
     - name: Install SDK dependencies
       run: |
         vab install "build-tools;33.0.2"
